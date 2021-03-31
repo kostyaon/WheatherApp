@@ -7,7 +7,7 @@ struct CurrentWheather: Decodable {
     let feelsTemperature: Double
     let pressure: Int
     let humidity: Int
-    let uvIndex: Int
+    let uvIndex: Double
     let visibilityMeters: Double
     var visibilityMiles: Double {
         visibilityMeters / 1609.34
@@ -50,8 +50,13 @@ struct CurrentWheather: Decodable {
             return "n"
         }
     }
-    let description: String
-    let icon: String
+    let weather: [Weather]
+    var description: String {
+        weather.first!.description
+    }
+    var icon: String {
+        weather.first!.icon
+    }
     
     // MARK: - CodingKeys
     enum CodingKeys: String, CodingKey {
@@ -88,13 +93,10 @@ struct CurrentWheather: Decodable {
         feelsTemperature = try container.decode(Double.self, forKey: .feelsTemperature)
         pressure = try container.decode(Int.self, forKey: .pressure)
         humidity = try container.decode(Int.self, forKey: .humidity)
-        uvIndex = try container.decode(Int.self, forKey: .uvIndex)
+        uvIndex = try container.decode(Double.self, forKey: .uvIndex)
         visibilityMeters = try container.decode(Double.self, forKey: .visibilityMeters)
         windSpeed = try container.decode(Double.self, forKey: .windSpeed)
         windDegree = try container.decode(Double.self, forKey: .windDegree)
-        
-        let weather = try container.nestedContainer(keyedBy: WeatherCodingKeys.self, forKey: .weather)
-        description = try weather.decode(String.self, forKey: .description)
-        icon = try weather.decode(String.self, forKey: .icon)
+        weather = try container.decode([Weather].self, forKey: .weather)
     }
 }

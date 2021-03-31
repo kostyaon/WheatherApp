@@ -6,7 +6,10 @@ struct DailyWeather: Decodable {
     let sunsetTime: Int
     let maxTemperature: Double
     let minTemperature: Double
-    let icon: String
+    let weather: [Weather]
+    var icon: String {
+        weather.first!.icon
+    }
     let probabilityOfPerception: Double
     
     // MARK: - CodingKeys
@@ -51,13 +54,10 @@ struct DailyWeather: Decodable {
         sunriseTime = try container.decode(Int.self, forKey: .sunriseTime)
         sunsetTime = try container.decode(Int.self, forKey: .sunsetTime)
         probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception)
+        weather = try container.decode([Weather].self, forKey: .weather)
         
         let temp = try container.nestedContainer(keyedBy: TemperatureCodingKeys.self, forKey: .temp)
         minTemperature = try temp.decode(Double.self, forKey: .minTemperature)
         maxTemperature = try temp.decode(Double.self, forKey: .maxTemperature)
-        
-        let weather = try container.nestedContainer(keyedBy: WeatherCodingKeys.self, forKey: .weather)
-        icon = try weather.decode(String.self, forKey: .icon)
-        
     }
 }
