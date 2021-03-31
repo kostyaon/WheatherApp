@@ -53,7 +53,7 @@ struct CurrentWheather: Decodable {
     let description: String
     let icon: String
     
-    // MARK: CodingKeys
+    // MARK: - CodingKeys
     enum CodingKeys: String, CodingKey {
         case dt
         case sunriseTime = "sunrise"
@@ -72,11 +72,13 @@ struct CurrentWheather: Decodable {
     }
     
     enum WeatherCodingKeys: CodingKey {
+        case id
+        case main
         case description
         case icon
     }
     
-    // MARK: init(decoder)
+    // MARK: - init(decoder)
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
