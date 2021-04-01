@@ -1,8 +1,15 @@
+import Foundation
 import UIKit
 
 class ViewController: UIViewController {
     // MARK: - Properties
     var weather: WeatherResponse?
+    
+    override func loadView() {
+        let mainScreen = MainScreenView()
+        self.view = mainScreen
+        self.view.backgroundColor = .white
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
