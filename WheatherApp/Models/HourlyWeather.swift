@@ -28,13 +28,6 @@ struct HourlyWeather: Decodable {
         case rain
     }
     
-    enum WeatherCodingKeys: CodingKey {
-        case id
-        case main
-        case description
-        case icon
-    }
-    
     // MARK: - init(decoder)
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

@@ -1,7 +1,10 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    // MARK: - Properties
+    var weather: WeatherResponse?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -9,8 +12,8 @@ class ViewController: UIViewController {
             switch result {
             case .failure(let error):
                 print("ERROR: \(error.localizedDescription)")
-            case .success(let weather):
-                print("WEATHER:\n \(weather)")
+            case .success(let response):
+                self.weather = response
             }
         }
     }
