@@ -3,7 +3,10 @@ import Foundation
 struct HourlyWeather: Decodable {
     let date: Int
     let temperature: Double
-    let icon: String
+    let weather: [Weather]
+    var icon: String {
+        weather.first!.icon
+    }
     let probabilityOfPerception: Double
     
     // MARK: - CodingKeys
@@ -25,21 +28,12 @@ struct HourlyWeather: Decodable {
         case rain
     }
     
-    enum WeatherCodingKeys: CodingKey {
-        case id
-        case main
-        case description
-        case icon
-    }
-    
     // MARK: - init(decoder)
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         date = try container.decode(Int.self, forKey: .date)
         temperature = try container.decode(Double.self, forKey: .temperature)
         probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception)
-        
-        let weather = try container.nestedContainer(keyedBy: WeatherCodingKeys.self, forKey: .weather)
-        icon = try weather.decode(String.self, forKey: .icon)
+        weather = try container.decode([Weather].self, forKey: .weather)
     }
 }
