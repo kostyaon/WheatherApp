@@ -55,7 +55,7 @@ class ParameterCell: UITableViewCell {
         addSubview(valueLabel)
         NSLayoutConstraint.activate([
             valueLabel.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
-            valueLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2)
+            valueLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2.0)
         ])
     }
 }

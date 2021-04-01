@@ -94,7 +94,7 @@ class MainScreenView: UIView {
         // Setup cityLabel
         addSubview(cityLabel)
         NSLayoutConstraint.activate([
-            cityLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 120),
+            cityLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 120.0),
             cityLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             cityLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
@@ -102,7 +102,7 @@ class MainScreenView: UIView {
         // Setup descriptionLabel
         addSubview(descriptionLabel)
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 5),
+            descriptionLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 5.0),
             descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
@@ -110,7 +110,7 @@ class MainScreenView: UIView {
         // Setup currentTempLabel
         addSubview(currentTempLabel)
         NSLayoutConstraint.activate([
-            currentTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5),
+            currentTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5.0),
             currentTempLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             currentTempLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
@@ -118,7 +118,7 @@ class MainScreenView: UIView {
         // Setup maxMinTempLabel
         addSubview(maxMinTempLabel)
         NSLayoutConstraint.activate([
-            maxMinTempLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor, constant: 5),
+            maxMinTempLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor, constant: 5.0),
             maxMinTempLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             maxMinTempLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
         ])
@@ -126,7 +126,7 @@ class MainScreenView: UIView {
         // Setup tableView
         addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 70),
+            tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 70.0),
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
@@ -138,7 +138,7 @@ class MainScreenView: UIView {
 extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 17
+        return 12
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -150,11 +150,12 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDelegate
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let hourlyView = HourlyWeatherView()
+        hourlyView.backgroundColor = .white
         
         return hourlyView
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50.0
+        return 130.0
     }
 }
