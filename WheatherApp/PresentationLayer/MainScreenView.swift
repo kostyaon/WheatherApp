@@ -65,11 +65,13 @@ class MainScreenView: UIView {
     
     
     lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: CGRect.zero, style: .grouped)
+        let tableView = UITableView(frame: CGRect.zero, style: .plain)
         
         tableView.dataSource = self
+        tableView.delegate = self
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.rowHeight = 55
         
         tableView.register(ParameterCell.self, forCellReuseIdentifier: "parameterCell")
         
@@ -124,7 +126,7 @@ class MainScreenView: UIView {
         // Setup tableView
         addSubview(tableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 40),
+            tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 70),
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
@@ -133,9 +135,10 @@ class MainScreenView: UIView {
 }
 
 // MARK: - Extensions
-extension MainScreenView: UITableViewDataSource {
+extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
+    // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        return 17
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -144,4 +147,14 @@ extension MainScreenView: UITableViewDataSource {
         return cell
     }
     
+    // UITableViewDelegate
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let hourlyView = HourlyWeatherView()
+        
+        return hourlyView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50.0
+    }
 }
