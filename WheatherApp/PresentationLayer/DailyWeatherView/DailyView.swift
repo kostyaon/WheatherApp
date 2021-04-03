@@ -23,6 +23,7 @@ class DailyView: UIView {
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "icloud.fill")
+        imageView.contentMode = .scaleAspectFit
         
         return imageView
     }()
@@ -88,7 +89,7 @@ class DailyView: UIView {
         // Setup dayLabel
         addSubview(dayLabel)
         NSLayoutConstraint.activate([
-            dayLabel.topAnchor.constraint(equalTo: self.topAnchor),
+            dayLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
             dayLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
            dayLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -10)
         ])
@@ -98,6 +99,8 @@ class DailyView: UIView {
         NSLayoutConstraint.activate([
             icon.topAnchor.constraint(equalTo: self.topAnchor),
             icon.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            icon.bottomAnchor.constraint(equalTo: icon.topAnchor, constant: 40),
+            icon.widthAnchor.constraint(equalToConstant: 40)
         ])
         
         // Setup predictionOfPerceptionLabel
@@ -105,27 +108,45 @@ class DailyView: UIView {
         NSLayoutConstraint.activate([
             predictionOfPerceptionLabel.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 3),
             predictionOfPerceptionLabel.centerYAnchor.constraint(equalTo: icon.centerYAnchor),
+            predictionOfPerceptionLabel.widthAnchor.constraint(equalToConstant: 30)
         ])
         
         // Setup maxTemperatureLabel
         addSubview(maxTemperatureLabel)
         NSLayoutConstraint.activate([
-            maxTemperatureLabel.leadingAnchor.constraint(equalTo: predictionOfPerceptionLabel.trailingAnchor, constant: 45)
+            maxTemperatureLabel.leadingAnchor.constraint(equalTo: predictionOfPerceptionLabel.trailingAnchor, constant: 45),
+            maxTemperatureLabel.centerYAnchor.constraint(equalTo: predictionOfPerceptionLabel.centerYAnchor),
+            maxTemperatureLabel.widthAnchor.constraint(equalToConstant: 25)
         ])
         
         // Setup minTemperatureLabel
         addSubview(minTemperatureLabel)
         NSLayoutConstraint.activate([
-            minTemperatureLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -10),
-            minTemperatureLabel.leadingAnchor.constraint(equalTo: maxTemperatureLabel.trailingAnchor, constant: 25)
+            minTemperatureLabel.centerYAnchor.constraint(equalTo: maxTemperatureLabel.centerYAnchor),
+            minTemperatureLabel.leadingAnchor.constraint(equalTo: maxTemperatureLabel.trailingAnchor, constant: 25),
+            minTemperatureLabel.widthAnchor.constraint(equalToConstant: 25)
         ])
+    }
+    
+    private func loadIcon(name icon: String) {
+        WeatherAPIManager.loadImage(router: WeatherRouter.fetchIcon(icon)) { result in
+            switch result {
+            case.failure(let error):
+                fatalError("ERROR: \(error.localizedDescription)")
+            case.success(let data):
+                DispatchQueue.main.async {
+                    self.icon.image = UIImage(data: data)
+                }
+            }
+        }
     }
     
     // MARK: - Public methods
     public func updateView(with weather: DailyWeather) {
+        loadIcon(name: weather.icon)
         dayLabel.text = weather.day
-        predictionOfPerceptionLabel.text = ("\(weather.probabilityOfPerception)%")
-        maxTemperatureLabel.text = "\(weather.maxTemperature)"
-        minTemperatureLabel.text = "\(weather.minTemperature)"
+        weather.probabilityOfPerception == 0.0 ? (predictionOfPerceptionLabel.text = "") : (predictionOfPerceptionLabel.text = "\(weather.probabilityOfPerception.intFormat)%")
+        maxTemperatureLabel.text = "\(weather.maxTemperature.intFormat)"
+        minTemperatureLabel.text = "\(weather.minTemperature.intFormat)"
     }
 }

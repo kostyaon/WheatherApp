@@ -4,7 +4,7 @@ import UIKit
 class MainScreenView: UIView {
     // MARK: - Properties
     var currentWeather: CurrentWheather?
-    var dailyWeather: [DailyWeather] = []
+    var dailyWeather: [DailyWeather]?
     var hourlyWeather: [HourlyWeather] = []
     
     // MARK: - Views
@@ -141,7 +141,7 @@ class MainScreenView: UIView {
     private func updateCurrentWeather() {
         descriptionLabel.text = currentWeather!.description.capitalized
         currentTempLabel.text = "\(currentWeather!.temperature.intFormat)°"
-        maxMinTempLabel.text = "Max. \(dailyWeather.first!.maxTemperature.intFormat)°, min. \(dailyWeather.first!.minTemperature.intFormat)°"
+        maxMinTempLabel.text = "Max. \(dailyWeather!.first!.maxTemperature.intFormat)°, min. \(dailyWeather!.first!.minTemperature.intFormat)°"
     }
     
     // MARK: - Helper methods
@@ -168,6 +168,9 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell") as! DailyWeatherCell
+            if let weather = dailyWeather {
+                cell.setupDailyView(with: weather)
+            }
             return cell
         case 1...10:
             if let weather = currentWeather {
@@ -195,7 +198,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0:
-            return 300
+            return 250
         default:
             return 55.0
         }

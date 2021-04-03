@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 struct WeatherAPIManager {
     static func fetch<T: Decodable>(type: T.Type, router: EndpointType, completion: @escaping (Result<T, Error>) -> Void) {

@@ -67,7 +67,7 @@ struct DailyWeather: Decodable {
         date = try container.decode(TimeInterval.self, forKey: .date)
         sunriseTime = try container.decode(TimeInterval.self, forKey: .sunriseTime)
         sunsetTime = try container.decode(TimeInterval.self, forKey: .sunsetTime)
-        probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception)
+        probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception) * 100
         weather = try container.decode([Weather].self, forKey: .weather)
         
         let temp = try container.nestedContainer(keyedBy: TemperatureCodingKeys.self, forKey: .temp)

@@ -28,20 +28,23 @@ class DailyWeatherCell: UITableViewCell {
     }
     
     // MARK: - Private methods
-    private func setupViews(/*dailyWeather: [DailyWeather]*/) {
+    private func setupViews() {
+        // Setup stackView
         addSubview(stackView)
-        for _ in 0...7 {
-            let dailyView = DailyView()
-            dailyView.backgroundColor = .red
-            //dailyView.updateView(with: day)
-            stackView.addArrangedSubview(dailyView)
-        }
-        
         NSLayoutConstraint.activate([
             stackView.topAnchor.constraint(equalTo: self.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor)
         ])
+    }
+    
+    // MARK: - Helper methods
+    public func setupDailyView(with weather: [DailyWeather]) {
+        for day in weather {
+            let dailyView = DailyView()
+            dailyView.updateView(with: day)
+            stackView.addArrangedSubview(dailyView)
+        }
     }
     
 }

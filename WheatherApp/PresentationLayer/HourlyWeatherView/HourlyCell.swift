@@ -102,4 +102,9 @@ class HourlyCell: UICollectionViewCell {
             temperatureLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
+    
+    // MARK: - Helper methods
+    public func updateHourlyCell(with weather: HourlyWeather) {
+        
+    }
 }
