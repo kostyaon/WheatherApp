@@ -1,9 +1,30 @@
 import Foundation
 
 struct DailyWeather: Decodable {
-    let date: Int
-    let sunriseTime: Int
-    let sunsetTime: Int
+    let date: TimeInterval
+    var day: String {
+        let date = Date(timeIntervalSince1970: self.date)
+        
+        let day = AppEnvironment.dateFormatter(from: date, to: .dayFormatter)
+        
+        return day
+    }
+    let sunriseTime: TimeInterval
+    var sunrise: String {
+        let date = Date(timeIntervalSince1970: self.sunriseTime)
+        
+        let time = AppEnvironment.dateFormatter(from: date, to: .timeFormatter)
+        
+        return time
+    }
+    let sunsetTime: TimeInterval
+    var sunset: String {
+        let date = Date(timeIntervalSince1970: self.sunsetTime)
+        
+        let time = AppEnvironment.dateFormatter(from: date, to: .timeFormatter)
+        
+        return time
+    }
     let maxTemperature: Double
     let minTemperature: Double
     let weather: [Weather]
@@ -43,9 +64,9 @@ struct DailyWeather: Decodable {
     // MARK: - init(decoder)
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        date = try container.decode(Int.self, forKey: .date)
-        sunriseTime = try container.decode(Int.self, forKey: .sunriseTime)
-        sunsetTime = try container.decode(Int.self, forKey: .sunsetTime)
+        date = try container.decode(TimeInterval.self, forKey: .date)
+        sunriseTime = try container.decode(TimeInterval.self, forKey: .sunriseTime)
+        sunsetTime = try container.decode(TimeInterval.self, forKey: .sunsetTime)
         probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception)
         weather = try container.decode([Weather].self, forKey: .weather)
         

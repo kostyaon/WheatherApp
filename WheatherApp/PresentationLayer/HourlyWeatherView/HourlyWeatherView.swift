@@ -2,6 +2,9 @@ import Foundation
 import UIKit
 
 class HourlyWeatherView: UIView {
+    // MARK: - Properties
+    var hourlyWeather: [HourlyWeather] = []
+    
     // MARK: - Views
     lazy var topBorder: UIView = {
         let border = UIView()

@@ -31,7 +31,7 @@ extension WeatherRouter: EndpointType {
     var parameters: String {
         switch self {
         case .fetchWeatherOneCall(let latitude, let longitude, let exclude, let apiKey):
-            return "lat=\(latitude)&lon=\(longitude)&exclude=\(exclude)&appid=\(apiKey)"
+            return "lat=\(latitude)&lon=\(longitude)&exclude=\(exclude)&appid=\(apiKey)&units=metric"
             
         case .fetchIcon(let icon):
             return "\(icon)@2x.png"

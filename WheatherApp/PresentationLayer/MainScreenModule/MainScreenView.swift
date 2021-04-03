@@ -2,6 +2,11 @@ import Foundation
 import UIKit
 
 class MainScreenView: UIView {
+    // MARK: - Properties
+    var currentWeather: CurrentWheather?
+    var dailyWeather: [DailyWeather] = []
+    var hourlyWeather: [HourlyWeather] = []
+    
     // MARK: - Views
     lazy var cityLabel: UILabel = {
         let label = UILabel()
@@ -71,9 +76,9 @@ class MainScreenView: UIView {
         tableView.delegate = self
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.rowHeight = 55
         
         tableView.register(ParameterCell.self, forCellReuseIdentifier: "parameterCell")
+        tableView.register(DailyWeatherCell.self, forCellReuseIdentifier: "dailyCell")
         
         return tableView
     }()
@@ -132,6 +137,22 @@ class MainScreenView: UIView {
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
+    
+    private func updateCurrentWeather() {
+        descriptionLabel.text = currentWeather!.description.capitalized
+        currentTempLabel.text = "\(currentWeather!.temperature.intFormat)°"
+        maxMinTempLabel.text = "Max. \(dailyWeather.first!.maxTemperature.intFormat)°, min. \(dailyWeather.first!.minTemperature.intFormat)°"
+    }
+    
+    // MARK: - Helper methods
+    public func updateView(with weather: WeatherResponse) {
+        self.hourlyWeather = weather.hourly48
+        self.dailyWeather = weather.daily7
+        self.currentWeather = weather.currentWeather
+        updateCurrentWeather()
+        tableView.reloadData()
+    }
+    
 }
 
 // MARK: - Extensions
@@ -144,7 +165,19 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "parameterCell") as! ParameterCell
         
-        return cell
+        switch indexPath.row {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell") as! DailyWeatherCell
+            return cell
+        case 1...10:
+            if let weather = currentWeather {
+                cell.updateParameterCell(for: indexPath.row, with: weather)
+            }
+            return cell
+        default:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "parameterCell") as! ParameterCell
+            return cell
+        }
     }
     
     // UITableViewDelegate
@@ -157,5 +190,14 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 130.0
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.row {
+        case 0:
+            return 300
+        default:
+            return 55.0
+        }
     }
 }

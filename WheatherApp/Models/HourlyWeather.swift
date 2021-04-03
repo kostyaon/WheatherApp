@@ -1,7 +1,14 @@
 import Foundation
 
 struct HourlyWeather: Decodable {
-    let date: Int
+    let date: TimeInterval
+    var hour: String {
+        let date = Date(timeIntervalSince1970: self.date)
+
+        let hour = AppEnvironment.dateFormatter(from: date, to: .hourFormatter)
+        
+        return hour
+    }
     let temperature: Double
     let weather: [Weather]
     var icon: String {
@@ -31,7 +38,7 @@ struct HourlyWeather: Decodable {
     // MARK: - init(decoder)
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        date = try container.decode(Int.self, forKey: .date)
+        date = try container.decode(TimeInterval.self, forKey: .date)
         temperature = try container.decode(Double.self, forKey: .temperature)
         probabilityOfPerception = try container.decode(Double.self, forKey: .probabilityOfPerception)
         weather = try container.decode([Weather].self, forKey: .weather)
