@@ -71,6 +71,7 @@ struct CurrentWheather: Decodable {
     var icon: String {
         weather.first!.icon
     }
+    var probabilityOfPerception: Double?
     
     // MARK: - CodingKeys
     enum CodingKeys: String, CodingKey {

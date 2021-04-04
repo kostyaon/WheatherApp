@@ -27,7 +27,7 @@ class ParameterCell: UITableViewCell {
             .withSize(20)
         label.textColor = .black
         label.shadowOffset = CGSize(width: 0, height: -1.2)
-        
+
         return label
     }()
     
@@ -70,8 +70,11 @@ class ParameterCell: UITableViewCell {
             valueLabel.text = weather.sunset
         case 3:
             nameLabel.text = "Probability of precepetation"
-            // TODO: Add POP
-            //valueLabel.text = weather.p
+            if let pop = weather.probabilityOfPerception {
+                valueLabel.text = "\(pop)%"
+            } else {
+                valueLabel.text = "0%"
+            }
         case 4:
             nameLabel.text = "Humidity"
             valueLabel.text = "\(weather.humidity) %"
@@ -82,9 +85,8 @@ class ParameterCell: UITableViewCell {
             nameLabel.text = "Feels like"
             valueLabel.text = "\(weather.feelsTemperature.intFormat)°"
         case 7:
-            nameLabel.text = "Precipitation"
-            // TODO: Add precipitation
-            //valueLabel.text =
+            nameLabel.text = "Pepception"
+            valueLabel.text = "0 mm"
         case 8:
             nameLabel.text = "Pressure"
             valueLabel.text = "\(weather.pressure) hPa"

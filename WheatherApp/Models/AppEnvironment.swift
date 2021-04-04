@@ -22,7 +22,10 @@ enum Formatter: String {
 // MARK: - Extensions
 extension Double {
     var intFormat: String {
-        return String(format: "%.0f", self)
+        if self.rounded() == -0.0 {
+            return "0"
+        }
+        return String(format: "%.0f", self.rounded())
     }
     
     var twoDecimalsFormat: String {

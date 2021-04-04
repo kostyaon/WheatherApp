@@ -5,7 +5,7 @@ class ViewController: UIViewController {
     override func loadView() {
         let mainScreen = MainScreenView()
         self.view = mainScreen
-        self.view.backgroundColor = .white
+        self.view.backgroundColor = UIColor(red: 0, green: 164, blue: 255, alpha: 1.0)
     }
     
     override func viewDidLoad() {

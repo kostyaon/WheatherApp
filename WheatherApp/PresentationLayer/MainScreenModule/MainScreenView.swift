@@ -78,6 +78,7 @@ class MainScreenView: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = false
+        tableView.backgroundColor = .clear
         
         tableView.register(ParameterCell.self, forCellReuseIdentifier: "parameterCell")
         tableView.register(DailyWeatherCell.self, forCellReuseIdentifier: "dailyCell")
@@ -156,7 +157,14 @@ class MainScreenView: UIView {
         return weather
     }
     
-    private func updateHourlyWeather(with weather: [HourlyWeather]) {
+    // MARK: - Helper methods
+    public func updateView(with weather: WeatherResponse) {
+        self.currentWeather = weather.currentWeather
+        self.dailyWeather = weather.daily7
+        
+        currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception * 100
+        
+        let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
         for index in 0...11 {
             self.hourlyWeather.append(weather.hourly48[index])
             for el in array {
@@ -165,15 +173,6 @@ class MainScreenView: UIView {
                 }
             }
         }
-    }
-    
-    // MARK: - Helper methods
-    public func updateView(with weather: WeatherResponse) {
-        self.currentWeather = weather.currentWeather
-        self.dailyWeather = weather.daily7
-        
-        let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
-      
 
         updateCurrentWeather()
         tableView.reloadData()
@@ -185,15 +184,17 @@ class MainScreenView: UIView {
 extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 12
+        return 11
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "parameterCell") as! ParameterCell
+        cell.separatorInset = UIEdgeInsets(top: 0.0, left: 20, bottom: 0.0, right: 20)
         
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "dailyCell") as! DailyWeatherCell
+            cell.separatorInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
             if let weather = dailyWeather {
                 cell.setupDailyView(with: weather)
             }
@@ -204,7 +205,6 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
             }
             return cell
         default:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "parameterCell") as! ParameterCell
             return cell
         }
     }
@@ -212,8 +212,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDelegate
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let hourlyView = HourlyWeatherView()
-        hourlyView.backgroundColor = .white
-  
+
         hourlyView.updateView(with: hourlyWeather)
         
         return hourlyView
@@ -230,5 +229,9 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         default:
             return 55.0
         }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cell.backgroundColor = .clear
     }
 }
