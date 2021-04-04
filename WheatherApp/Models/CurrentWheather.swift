@@ -1,8 +1,22 @@
 import Foundation
 
 struct CurrentWheather: Decodable {
-    let sunriseTime: Int
-    let sunsetTime: Int
+    let sunriseTime: TimeInterval
+    var sunrise: String {
+        let date = Date(timeIntervalSince1970: self.sunriseTime)
+        
+        let time = AppEnvironment.dateFormatter(from: date, to: .timeFormatter)
+        
+        return time
+    }
+    let sunsetTime: TimeInterval
+    var sunset: String {
+        let date = Date(timeIntervalSince1970: self.sunsetTime)
+        
+        let time = AppEnvironment.dateFormatter(from: date, to: .timeFormatter)
+        
+        return time
+    }
     let temperature: Double
     let feelsTemperature: Double
     let pressure: Int
@@ -52,11 +66,12 @@ struct CurrentWheather: Decodable {
     }
     let weather: [Weather]
     var description: String {
-        weather.first!.description
+        weather.first!.description!
     }
     var icon: String {
         weather.first!.icon
     }
+    var probabilityOfPerception: Double?
     
     // MARK: - CodingKeys
     enum CodingKeys: String, CodingKey {
@@ -80,8 +95,8 @@ struct CurrentWheather: Decodable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        sunriseTime = try container.decode(Int.self, forKey: .sunriseTime)
-        sunsetTime = try container.decode(Int.self, forKey: .sunsetTime)
+        sunriseTime = try container.decode(TimeInterval.self, forKey: .sunriseTime)
+        sunsetTime = try container.decode(TimeInterval.self, forKey: .sunsetTime)
         temperature = try container.decode(Double.self, forKey: .temperature)
         feelsTemperature = try container.decode(Double.self, forKey: .feelsTemperature)
         pressure = try container.decode(Int.self, forKey: .pressure)
