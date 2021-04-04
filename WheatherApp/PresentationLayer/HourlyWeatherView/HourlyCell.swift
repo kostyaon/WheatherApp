@@ -38,6 +38,7 @@ class HourlyCell: UICollectionViewCell {
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(systemName: "icloud.fill")
+        imageView.contentMode = .scaleAspectFit
         
         return imageView
     }()
@@ -90,7 +91,9 @@ class HourlyCell: UICollectionViewCell {
         addSubview(icon)
         NSLayoutConstraint.activate([
             icon.topAnchor.constraint(equalTo: predictionOfPerceptionLabel.bottomAnchor, constant: 10.0),
-            icon.centerXAnchor.constraint(equalTo: self.centerXAnchor)
+            icon.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            icon.bottomAnchor.constraint(equalTo: icon.topAnchor, constant: 40),
+            icon.widthAnchor.constraint(equalToConstant: 40)
         ])
         
         // Setup temperatureLabel
@@ -103,8 +106,31 @@ class HourlyCell: UICollectionViewCell {
         ])
     }
     
+    private func loadIcon(name icon: String) {
+        WeatherAPIManager.loadImage(router: WeatherRouter.fetchIcon(icon)) { result in
+            switch result {
+            case.failure(let error):
+                fatalError("ERROR: \(error.localizedDescription)")
+            case.success(let data):
+                DispatchQueue.main.async {
+                    self.icon.image = UIImage(data: data)
+                }
+            }
+        }
+    }
+    
     // MARK: - Helper methods
     public func updateHourlyCell(with weather: HourlyWeather) {
+        loadIcon(name: weather.icon)
         
+        if let temp = weather.temperature {
+            timeLabel.text = weather.hour
+            temperatureLabel.text = "\(temp.intFormat)°"
+            weather.probabilityOfPerception == 0.0 ? (predictionOfPerceptionLabel.text = "") : (predictionOfPerceptionLabel.text = "\(weather.probabilityOfPerception!.intFormat)%")
+        } else {
+            timeLabel.text = weather.time
+            temperatureLabel.text = weather.sunState
+            predictionOfPerceptionLabel.text = ""
+        }
     }
 }

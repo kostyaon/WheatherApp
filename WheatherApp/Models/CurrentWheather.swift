@@ -66,7 +66,7 @@ struct CurrentWheather: Decodable {
     }
     let weather: [Weather]
     var description: String {
-        weather.first!.description
+        weather.first!.description!
     }
     var icon: String {
         weather.first!.icon

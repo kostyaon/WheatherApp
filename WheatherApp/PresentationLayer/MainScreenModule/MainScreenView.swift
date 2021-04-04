@@ -76,6 +76,8 @@ class MainScreenView: UIView {
         tableView.delegate = self
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.allowsSelection = false
         
         tableView.register(ParameterCell.self, forCellReuseIdentifier: "parameterCell")
         tableView.register(DailyWeatherCell.self, forCellReuseIdentifier: "dailyCell")
@@ -144,11 +146,35 @@ class MainScreenView: UIView {
         maxMinTempLabel.text = "Max. \(dailyWeather!.first!.maxTemperature.intFormat)°, min. \(dailyWeather!.first!.minTemperature.intFormat)°"
     }
     
+    private func addSunriseSunsetInHourlyWeather(from dailyWeather: [DailyWeather]) -> [HourlyWeather] {
+        var weather: [HourlyWeather] = []
+        weather.append(HourlyWeather(time: dailyWeather[0].sunsetTime, sunState: "Sunset", icon: "50d"))
+        weather.append(HourlyWeather(time: dailyWeather[0].sunriseTime, sunState: "Sunrise", icon: "02d"))
+        weather.append(HourlyWeather(time: dailyWeather[1].sunsetTime, sunState: "Sunset", icon: "50d"))
+        weather.append(HourlyWeather(time: dailyWeather[1].sunriseTime, sunState: "Sunrise", icon: "02d"))
+        
+        return weather
+    }
+    
+    private func updateHourlyWeather(with weather: [HourlyWeather]) {
+        for index in 0...11 {
+            self.hourlyWeather.append(weather.hourly48[index])
+            for el in array {
+                if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
+                    self.hourlyWeather.append(el)
+                }
+            }
+        }
+    }
+    
     // MARK: - Helper methods
     public func updateView(with weather: WeatherResponse) {
-        self.hourlyWeather = weather.hourly48
-        self.dailyWeather = weather.daily7
         self.currentWeather = weather.currentWeather
+        self.dailyWeather = weather.daily7
+        
+        let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
+      
+
         updateCurrentWeather()
         tableView.reloadData()
     }
@@ -187,6 +213,8 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let hourlyView = HourlyWeatherView()
         hourlyView.backgroundColor = .white
+  
+        hourlyView.updateView(with: hourlyWeather)
         
         return hourlyView
     }

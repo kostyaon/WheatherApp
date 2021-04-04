@@ -3,7 +3,7 @@ import UIKit
 
 class HourlyWeatherView: UIView {
     // MARK: - Properties
-    var hourlyWeather: [HourlyWeather] = []
+    var hourlyWeather: [HourlyWeather]?
     
     // MARK: - Views
     lazy var topBorder: UIView = {
@@ -89,17 +89,37 @@ class HourlyWeatherView: UIView {
             bottomBorder.bottomAnchor.constraint(equalTo: collectionView.bottomAnchor)
         ])
     }
+    
+    private func dateToHour(to date: Date?) -> String {
+        let hour = AppEnvironment.dateFormatter(from: date ?? Date(), to: .hourFormatter)
+        return hour
+    }
+    
+    // MARK: - Helper methos
+    public func updateView(with weather: [HourlyWeather]) {
+        hourlyWeather = weather
+        
+        collectionView.reloadData()
+    }
 }
 
 // MARK: - Extensions
 extension HourlyWeatherView: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+        guard let weather = hourlyWeather else {
+            return 12
+        }
+        
+        return weather.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "hourlyCell", for: indexPath) as! HourlyCell
-
+        
+        if let weather = hourlyWeather {
+            cell.updateHourlyCell(with: weather[indexPath.row])
+        }
+        
         return cell
     }
     

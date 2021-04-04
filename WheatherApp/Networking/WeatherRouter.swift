@@ -43,7 +43,6 @@ extension WeatherRouter: EndpointType {
     var fullURL: URL {
         switch self {
         default:
-            print(URL(string: self.baseURL + self.path + self.parameters)!)
             return URL(string: self.baseURL + self.path + self.parameters)!
         }
     }

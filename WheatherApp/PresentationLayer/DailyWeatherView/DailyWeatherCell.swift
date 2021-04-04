@@ -3,7 +3,7 @@ import UIKit
 
 class DailyWeatherCell: UITableViewCell {
     // MARK: - Views
-    let stackView: UIStackView = {
+    lazy var stackView: UIStackView = {
         let stackView = UIStackView()
         
         stackView.translatesAutoresizingMaskIntoConstraints = false
@@ -38,13 +38,25 @@ class DailyWeatherCell: UITableViewCell {
         ])
     }
     
-    // MARK: - Helper methods
-    public func setupDailyView(with weather: [DailyWeather]) {
+    private func setupViewsInStack(with weather: [DailyWeather]) {
         for day in weather {
             let dailyView = DailyView()
             dailyView.updateView(with: day)
+            
             stackView.addArrangedSubview(dailyView)
         }
+    }
+    
+    private func updateStackView(with weather: [DailyWeather]) {
+        for (index, day) in weather.enumerated() {
+            let dailyView = stackView.arrangedSubviews[index] as? DailyView
+            dailyView?.updateView(with: day)
+        }
+    }
+    
+    // MARK: - Helper methods
+    public func setupDailyView(with weather: [DailyWeather]) {
+        stackView.arrangedSubviews.count == 0 ? (setupViewsInStack(with: weather)) : (updateStackView(with: weather))
     }
     
 }
