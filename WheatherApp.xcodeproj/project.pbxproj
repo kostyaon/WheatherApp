@@ -28,6 +28,7 @@
 		84DD3B092616DF1F00BA368D /* HourlyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD3B082616DF1F00BA368D /* HourlyCell.swift */; };
 		84DD3B0C2616DF1F00BA368D /* DailyWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD3B0B2616DF1F00BA368D /* DailyWeatherCell.swift */; };
 		84DD3B102616DF1F00BA368D /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD3B0F2616DF1F00BA368D /* DailyView.swift */; };
+		84FA1F0D261B94B800D6C483 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA1F0C261B94B800D6C483 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		84DD3B082616DF1F00BA368D /* HourlyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HourlyCell.swift; sourceTree = "<group>"; };
 		84DD3B0B2616DF1F00BA368D /* DailyWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherCell.swift; sourceTree = "<group>"; };
 		84DD3B0F2616DF1F00BA368D /* DailyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyView.swift; sourceTree = "<group>"; };
+		84FA1F0C261B94B800D6C483 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		84DD3AB8261466DF00BA368D /* WheatherApp */ = {
 			isa = PBXGroup;
 			children = (
+				84FA1F0B261B949900D6C483 /* GPS */,
 				84DD3AFC2616405700BA368D /* PresentationLayer */,
 				84DD3AE02614BDBB00BA368D /* Networking */,
 				84DD3ACF261483B600BA368D /* Models */,
@@ -158,6 +161,14 @@
 				84DD3B082616DF1F00BA368D /* HourlyCell.swift */,
 			);
 			path = HourlyWeatherView;
+			sourceTree = "<group>";
+		};
+		84FA1F0B261B949900D6C483 /* GPS */ = {
+			isa = PBXGroup;
+			children = (
+				84FA1F0C261B94B800D6C483 /* LocationManager.swift */,
+			);
+			path = GPS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,6 +258,7 @@
 				84DD3AD52614846400BA368D /* CurrentWheather.swift in Sources */,
 				84DD3AE72614C06C00BA368D /* WeatherRouter.swift in Sources */,
 				84DD3B092616DF1F00BA368D /* HourlyCell.swift in Sources */,
+				84FA1F0D261B94B800D6C483 /* LocationManager.swift in Sources */,
 				84DD3AFE261640A000BA368D /* MainScreenView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
