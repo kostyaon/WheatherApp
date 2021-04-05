@@ -49,7 +49,7 @@ class MainScreenView: UIView {
             .preferredFont(forTextStyle: .headline)
             .withSize(80)
         label.textColor = .black
-        label.textAlignment = .cente
+        label.textAlignment = .center
         label.shadowOffset = CGSize(width: 0, height: -1.2)
         
         return label
@@ -265,8 +265,6 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
             } else {
                 tableViewTopConstraint!.constant -= delta*2
             }
-            
-            scrollView.contentOffset.y -= delta
         }
         
         // Finger scrolls down
