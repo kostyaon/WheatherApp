@@ -2,11 +2,11 @@ import Foundation
 
 class PersistanceManager {
     static func saveWeatherResponse(item: WeatherResponse) {
-        let encoder = PropertyListEncoder()
+        let encoder = JSONEncoder()
         
         do {
-            //let data = try encoder.encode(item)
-            //try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
+            let data = try encoder.encode(item)
+            try data.write(to: dataFilePath(), options: Data.WritingOptions.atomic)
         } catch {
             print("Error with encoding item: \(error.localizedDescription)")
         }
@@ -16,7 +16,7 @@ class PersistanceManager {
         var item: WeatherResponse?
         
         if let data = try? Data(contentsOf: dataFilePath()) {
-            let decoder = PropertyListDecoder()
+            let decoder = JSONDecoder()
             
             do {
                 item = try decoder.decode(WeatherResponse.self, from: data)
@@ -31,6 +31,6 @@ class PersistanceManager {
     static func dataFilePath() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         
-        return paths[0].appendingPathComponent("WeatherApp.plist")
+        return paths[0].appendingPathComponent("WeatherApp.json")
     }
 }
