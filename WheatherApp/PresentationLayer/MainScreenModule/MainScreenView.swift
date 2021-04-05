@@ -155,6 +155,7 @@ class MainScreenView: UIView {
     
     private func addSunriseSunsetInHourlyWeather(from dailyWeather: [DailyWeather]) -> [HourlyWeather] {
         var weather: [HourlyWeather] = []
+        
         weather.append(HourlyWeather(time: dailyWeather[0].sunsetTime, sunState: "Sunset", icon: "50d"))
         weather.append(HourlyWeather(time: dailyWeather[0].sunriseTime, sunState: "Sunrise", icon: "02d"))
         weather.append(HourlyWeather(time: dailyWeather[1].sunsetTime, sunState: "Sunset", icon: "50d"))
@@ -163,12 +164,24 @@ class MainScreenView: UIView {
         return weather
     }
     
+    private func animateBigDelta(constraint: NSLayoutConstraint, views: [UIView]?, alphaForViews alpha: CGFloat?, bound: CGFloat) {
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveLinear], animations: {
+            constraint.constant = bound
+            if let views = views, let alpha = alpha {
+                views.forEach {
+                    $0.alpha = alpha
+                }
+            }
+            self.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
     // MARK: - Helper methods
     public func updateView(with weather: WeatherResponse) {
         self.currentWeather = weather.currentWeather
         self.dailyWeather = weather.daily7
         
-        currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception * 100
+        currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception
         
         let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
         for index in 0...11 {
@@ -183,7 +196,6 @@ class MainScreenView: UIView {
         updateCurrentWeather()
         tableView.reloadData()
     }
-    
 }
 
 // MARK: - Extensions
@@ -250,6 +262,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         if (scrollView.contentOffset.y > 0 && delta > 0 && cityTopConstraint!.constant >= cityTopConstraintRange.lowerBound) {
             // Animate current weather description block
             if cityDelta < cityTopConstraintRange.lowerBound {
+                //animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 0.0, bound: cityTopConstraintRange.lowerBound)
                 cityTopConstraint!.constant = cityTopConstraintRange.lowerBound
                 currentTempLabel.alpha = 0.0
                 maxMinTempLabel.alpha  = 0.0
@@ -257,10 +270,13 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
                 cityTopConstraint!.constant -= delta
                 currentTempLabel.alpha -= delta/100
                 maxMinTempLabel.alpha -= delta/100
+                
+                scrollView.contentOffset.y -= delta
             }
     
             // Animate tableView
             if tableViewDelta < tableViewTopConstraintRange.lowerBound {
+                //animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.lowerBound)
                 tableViewTopConstraint?.constant = tableViewTopConstraintRange.lowerBound
             } else {
                 tableViewTopConstraint!.constant -= delta*2
@@ -271,9 +287,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         if scrollView.contentOffset.y < 0 && delta < 0 && cityTopConstraint!.constant <= cityTopConstraintRange.upperBound {
             // Animate current weather description block
             if cityDelta > cityTopConstraintRange.upperBound {
-                cityTopConstraint!.constant = cityTopConstraintRange.upperBound
-                currentTempLabel.alpha = 1.0
-                maxMinTempLabel.alpha  = 1.0
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 1.0, bound: cityTopConstraintRange.upperBound)
             } else {
                 cityTopConstraint!.constant -= delta
                 currentTempLabel.alpha -= delta/100
@@ -282,7 +296,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
             
             // Animate tableView
             if tableViewDelta > tableViewTopConstraintRange.upperBound {
-                tableViewTopConstraint?.constant = tableViewTopConstraintRange.upperBound
+                animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.upperBound)
             } else {
                 tableViewTopConstraint!.constant -= delta*2
             }

@@ -71,7 +71,7 @@ class ParameterCell: UITableViewCell {
         case 3:
             nameLabel.text = "Probability of precepetation"
             if let pop = weather.probabilityOfPerception {
-                valueLabel.text = "\(pop)%"
+                valueLabel.text = "\(pop.intFormat)%"
             } else {
                 valueLabel.text = "0%"
             }
