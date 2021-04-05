@@ -6,6 +6,7 @@ class MainScreenView: UIView {
     var currentWeather: CurrentWheather?
     var dailyWeather: [DailyWeather]?
     var hourlyWeather: [HourlyWeather] = []
+    var oldContentOffset = CGPoint.zero
     
     // MARK: - Views
     lazy var cityLabel: UILabel = {
@@ -33,6 +34,7 @@ class MainScreenView: UIView {
             .withSize(25)
         label.textColor = .black
         label.textAlignment = .center
+
         label.shadowOffset = CGSize(width: 0, height: -1.2)
         
         return label
@@ -86,6 +88,12 @@ class MainScreenView: UIView {
         return tableView
     }()
     
+    // MARK: - Constraints
+    var cityTopConstraint: NSLayoutConstraint?
+    var tableViewTopConstraint: NSLayoutConstraint?
+    let cityTopConstraintRange = (CGFloat(84)...CGFloat(160))
+    let tableViewTopConstraintRange = (CGFloat(-80)...CGFloat(70))
+    
     // MARK: - init methods
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -101,40 +109,38 @@ class MainScreenView: UIView {
     private func setupViews() {
         // Setup cityLabel
         addSubview(cityLabel)
+        cityTopConstraint = cityLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 150)
         NSLayoutConstraint.activate([
-            cityLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 120.0),
-            cityLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            cityLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            cityTopConstraint!,
+            cityLabel.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
         
         // Setup descriptionLabel
         addSubview(descriptionLabel)
         NSLayoutConstraint.activate([
-            descriptionLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 5.0),
-            descriptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            descriptionLabel.topAnchor.constraint(equalTo: cityLabel.bottomAnchor, constant: 3.0),
+            descriptionLabel.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
         
         // Setup currentTempLabel
         addSubview(currentTempLabel)
         NSLayoutConstraint.activate([
             currentTempLabel.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 5.0),
-            currentTempLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            currentTempLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            currentTempLabel.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
         
         // Setup maxMinTempLabel
         addSubview(maxMinTempLabel)
         NSLayoutConstraint.activate([
             maxMinTempLabel.topAnchor.constraint(equalTo: currentTempLabel.bottomAnchor, constant: 5.0),
-            maxMinTempLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            maxMinTempLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            maxMinTempLabel.widthAnchor.constraint(equalTo: self.widthAnchor)
         ])
         
         // Setup tableView
         addSubview(tableView)
+        tableViewTopConstraint = tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 70.0)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: maxMinTempLabel.topAnchor, constant: 70.0),
+            tableViewTopConstraint!,
             tableView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
@@ -149,6 +155,7 @@ class MainScreenView: UIView {
     
     private func addSunriseSunsetInHourlyWeather(from dailyWeather: [DailyWeather]) -> [HourlyWeather] {
         var weather: [HourlyWeather] = []
+        
         weather.append(HourlyWeather(time: dailyWeather[0].sunsetTime, sunState: "Sunset", icon: "50d"))
         weather.append(HourlyWeather(time: dailyWeather[0].sunriseTime, sunState: "Sunrise", icon: "02d"))
         weather.append(HourlyWeather(time: dailyWeather[1].sunsetTime, sunState: "Sunset", icon: "50d"))
@@ -157,12 +164,24 @@ class MainScreenView: UIView {
         return weather
     }
     
+    private func animateBigDelta(constraint: NSLayoutConstraint, views: [UIView]?, alphaForViews alpha: CGFloat?, bound: CGFloat) {
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: [.curveLinear], animations: {
+            constraint.constant = bound
+            if let views = views, let alpha = alpha {
+                views.forEach {
+                    $0.alpha = alpha
+                }
+            }
+            self.layoutIfNeeded()
+        }, completion: nil)
+    }
+    
     // MARK: - Helper methods
     public func updateView(with weather: WeatherResponse) {
         self.currentWeather = weather.currentWeather
         self.dailyWeather = weather.daily7
         
-        currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception * 100
+        currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception
         
         let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
         for index in 0...11 {
@@ -177,7 +196,6 @@ class MainScreenView: UIView {
         updateCurrentWeather()
         tableView.reloadData()
     }
-    
 }
 
 // MARK: - Extensions
@@ -233,5 +251,57 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         cell.backgroundColor = .clear
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let delta = scrollView.contentOffset.y - oldContentOffset.y
+        let cityDelta = cityTopConstraint!.constant - delta
+        let tableViewDelta = tableViewTopConstraint!.constant - delta*2
+        
+        // Finger scrolls up
+        if (scrollView.contentOffset.y > 0 && delta > 0 && cityTopConstraint!.constant >= cityTopConstraintRange.lowerBound) {
+            // Animate current weather description block
+            if cityDelta < cityTopConstraintRange.lowerBound {
+                //animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 0.0, bound: cityTopConstraintRange.lowerBound)
+                cityTopConstraint!.constant = cityTopConstraintRange.lowerBound
+                currentTempLabel.alpha = 0.0
+                maxMinTempLabel.alpha  = 0.0
+            } else {
+                cityTopConstraint!.constant -= delta
+                currentTempLabel.alpha -= delta/100
+                maxMinTempLabel.alpha -= delta/100
+                
+                scrollView.contentOffset.y -= delta
+            }
+    
+            // Animate tableView
+            if tableViewDelta < tableViewTopConstraintRange.lowerBound {
+                //animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.lowerBound)
+                tableViewTopConstraint?.constant = tableViewTopConstraintRange.lowerBound
+            } else {
+                tableViewTopConstraint!.constant -= delta*2
+            }
+        }
+        
+        // Finger scrolls down
+        if scrollView.contentOffset.y < 0 && delta < 0 && cityTopConstraint!.constant <= cityTopConstraintRange.upperBound {
+            // Animate current weather description block
+            if cityDelta > cityTopConstraintRange.upperBound {
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 1.0, bound: cityTopConstraintRange.upperBound)
+            } else {
+                cityTopConstraint!.constant -= delta
+                currentTempLabel.alpha -= delta/100
+                maxMinTempLabel.alpha -= delta/100
+            }
+            
+            // Animate tableView
+            if tableViewDelta > tableViewTopConstraintRange.upperBound {
+                animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.upperBound)
+            } else {
+                tableViewTopConstraint!.constant -= delta*2
+            }
+        }
+        
+        oldContentOffset = scrollView.contentOffset
     }
 }
