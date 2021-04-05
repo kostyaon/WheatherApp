@@ -29,6 +29,7 @@
 		84DD3B0C2616DF1F00BA368D /* DailyWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD3B0B2616DF1F00BA368D /* DailyWeatherCell.swift */; };
 		84DD3B102616DF1F00BA368D /* DailyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DD3B0F2616DF1F00BA368D /* DailyView.swift */; };
 		84FA1F0D261B94B800D6C483 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA1F0C261B94B800D6C483 /* LocationManager.swift */; };
+		84FA1F10261BA8CC00D6C483 /* LocationManagerProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84FA1F0F261BA8CC00D6C483 /* LocationManagerProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		84DD3B0B2616DF1F00BA368D /* DailyWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyWeatherCell.swift; sourceTree = "<group>"; };
 		84DD3B0F2616DF1F00BA368D /* DailyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyView.swift; sourceTree = "<group>"; };
 		84FA1F0C261B94B800D6C483 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		84FA1F0F261BA8CC00D6C483 /* LocationManagerProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				84FA1F0C261B94B800D6C483 /* LocationManager.swift */,
+				84FA1F0F261BA8CC00D6C483 /* LocationManagerProtocols.swift */,
 			);
 			path = GPS;
 			sourceTree = "<group>";
@@ -243,6 +246,7 @@
 			files = (
 				84DD3B102616DF1F00BA368D /* DailyView.swift in Sources */,
 				84DD3B0C2616DF1F00BA368D /* DailyWeatherCell.swift in Sources */,
+				84FA1F10261BA8CC00D6C483 /* LocationManagerProtocols.swift in Sources */,
 				84DD3AD2261483F700BA368D /* WeatherResponse.swift in Sources */,
 				84DD3AF12614CB5000BA368D /* WeatherAPIManager.swift in Sources */,
 				84DD3B042616DF1C00BA368D /* HourlyWeatherView.swift in Sources */,

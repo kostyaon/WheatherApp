@@ -1,11 +1,6 @@
 import Foundation
 import CoreLocation
 
-protocol CurrentLocationManagerDelegate {
-    func showLocationDeniedAlert()
-    func updateCurrentCoordinate(with coordinate: (Double, Double))
-}
-
 class LocationManager: NSObject {
     // MARK: - Properties
     static let shared = LocationManager()
@@ -14,14 +9,8 @@ class LocationManager: NSObject {
     var locationManager = CLLocationManager()
     var currentCoordinate: (Double, Double)?
     
-    // MARK: - init methods
-    private override init() {
-        super.init()
-        defineAccess()
-    }
-    
-    // MARK: - Private methods
-    private func defineAccess() {
+    // MARK: - Helper methods
+    public func startSearchingLocation() {
         if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
         }

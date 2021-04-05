@@ -14,6 +14,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         let locationManager = LocationManager.shared
         locationManager.locationDelegate = self
+        locationManager.startSearchingLocation()
         
        
     }
