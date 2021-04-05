@@ -11,7 +11,7 @@ class HourlyWeatherView: UIView {
         
         border.translatesAutoresizingMaskIntoConstraints = false
         
-        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.1)
+        border.backgroundColor = UIColor(red: 255.0, green: 255.0, blue: 255.0, alpha: 0.1)
         
         return border
     }()
@@ -21,7 +21,7 @@ class HourlyWeatherView: UIView {
         
         border.translatesAutoresizingMaskIntoConstraints = false
         
-        border.backgroundColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.1)
+        border.backgroundColor = UIColor(red: 255.0, green: 255.0, blue: 255.0, alpha: 0.1)
         
         return border
     }()
@@ -43,7 +43,7 @@ class HourlyWeatherView: UIView {
         collectionView.register(HourlyCell.self, forCellWithReuseIdentifier: "hourlyCell")
         
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .white
+        collectionView.backgroundColor = UIColor.black
         collectionView.showsHorizontalScrollIndicator = false
         
         return collectionView
@@ -66,8 +66,8 @@ class HourlyWeatherView: UIView {
         addSubview(collectionView)
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: self.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 15),
+            collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -15),
             collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
         

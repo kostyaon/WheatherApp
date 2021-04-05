@@ -11,8 +11,9 @@ class ParameterCell: UITableViewCell {
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(15)
-        label.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.6)
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.textColor = UIColor(red: 255.0, green: 255.0, blue: 255.0, alpha: 0.6)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -22,11 +23,13 @@ class ParameterCell: UITableViewCell {
         
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "6:42 AM"
+        label.numberOfLines = 0
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
-            .withSize(20)
-        label.textColor = .black
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+            .withSize(22)
+        label.textColor = .white
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
 
         return label
     }()
@@ -48,14 +51,15 @@ class ParameterCell: UITableViewCell {
         addSubview(nameLabel)
         NSLayoutConstraint.activate([
             nameLabel.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
-            nameLabel.topAnchor.constraint(equalTo: self.topAnchor)
+            nameLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 5)
         ])
         
         // Setup valueLabel
         addSubview(valueLabel)
         NSLayoutConstraint.activate([
             valueLabel.leadingAnchor.constraint(equalTo: self.layoutMarginsGuide.leadingAnchor),
-            valueLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2.0)
+            valueLabel.trailingAnchor.constraint(equalTo: self.layoutMarginsGuide.trailingAnchor),
+            valueLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 1.5)
         ])
     }
     
@@ -63,38 +67,44 @@ class ParameterCell: UITableViewCell {
     public func updateParameterCell(for row: Int, with weather: CurrentWheather) {
         switch row {
         case 1:
-            nameLabel.text = "Sunrise"
-            valueLabel.text = weather.sunrise
+            nameLabel.text = " "
+            valueLabel.font = UIFont
+                .preferredFont(forTextStyle: .subheadline)
+                .withSize(15)
+            valueLabel.text = "Today: \(weather.description.lowercased()). The current temperature is \(weather.temperature)°, feels like \(weather.feelsTemperature)°. The wind speed: \(weather.windSpeed)m/s"
         case 2:
-            nameLabel.text = "Sunset"
-            valueLabel.text = weather.sunset
+            nameLabel.text = "SUNRISE"
+            valueLabel.text = weather.sunrise
         case 3:
-            nameLabel.text = "Probability of precepetation"
+            nameLabel.text = "SUNSET"
+            valueLabel.text = weather.sunset
+        case 4:
+            nameLabel.text = "PROBABILITY OF PERCEPTION"
             if let pop = weather.probabilityOfPerception {
                 valueLabel.text = "\(pop.intFormat)%"
             } else {
                 valueLabel.text = "0%"
             }
-        case 4:
-            nameLabel.text = "Humidity"
-            valueLabel.text = "\(weather.humidity) %"
         case 5:
-            nameLabel.text = "Wind"
-            valueLabel.text = "\(weather.windDirection) \(weather.windSpeed)m/s"
+            nameLabel.text = "HUMIDITY"
+            valueLabel.text = "\(weather.humidity) %"
         case 6:
-            nameLabel.text = "Feels like"
-            valueLabel.text = "\(weather.feelsTemperature.intFormat)°"
+            nameLabel.text = "WIND"
+            valueLabel.text = "\(weather.windDirection) \(weather.windSpeed)m/s"
         case 7:
-            nameLabel.text = "Pepception"
-            valueLabel.text = "0 mm"
+            nameLabel.text = "FEELS LIKE"
+            valueLabel.text = "\(weather.feelsTemperature.intFormat)°"
         case 8:
-            nameLabel.text = "Pressure"
-            valueLabel.text = "\(weather.pressure) hPa"
+            nameLabel.text = "PERCEPTION"
+            valueLabel.text = "0 mm"
         case 9:
-            nameLabel.text = "Visibility"
-            valueLabel.text = "\(weather.visibilityMiles.twoDecimalsFormat) mi"
+            nameLabel.text = "PRESSURE"
+            valueLabel.text = "\(weather.pressure) hPa"
         case 10:
-            nameLabel.text = "UV index"
+            nameLabel.text = "VISIBILITY"
+            valueLabel.text = "\(weather.visibilityMiles.twoDecimalsFormat) mi"
+        case 11:
+            nameLabel.text = "UV INDEX"
             valueLabel.text = "\(weather.uvIndex)"
         default:
             return

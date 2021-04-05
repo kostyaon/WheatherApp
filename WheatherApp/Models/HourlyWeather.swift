@@ -13,7 +13,7 @@ struct HourlyWeather: Decodable {
         let date = Date(timeIntervalSince1970: self.date)
 
         let hour = AppEnvironment.dateFormatter(from: date, to: .hourFormatter)
-        
+                
         return hour
     }
     var time: String {

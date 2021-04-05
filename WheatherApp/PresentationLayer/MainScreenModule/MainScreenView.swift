@@ -17,9 +17,10 @@ class MainScreenView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(50)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -32,10 +33,11 @@ class MainScreenView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(25)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
 
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -48,9 +50,10 @@ class MainScreenView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(80)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -63,9 +66,10 @@ class MainScreenView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.1)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -81,6 +85,7 @@ class MainScreenView: UIView {
         tableView.showsVerticalScrollIndicator = false
         tableView.allowsSelection = false
         tableView.backgroundColor = .clear
+        tableView.separatorColor = .white
         
         tableView.register(ParameterCell.self, forCellReuseIdentifier: "parameterCell")
         tableView.register(DailyWeatherCell.self, forCellReuseIdentifier: "dailyCell")
@@ -202,11 +207,12 @@ class MainScreenView: UIView {
 extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 11
+        return 12
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "parameterCell") as! ParameterCell
+        cell.tintColor = .white
         cell.separatorInset = UIEdgeInsets(top: 0.0, left: 20, bottom: 0.0, right: 20)
         
         switch indexPath.row {
@@ -217,7 +223,13 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
                 cell.setupDailyView(with: weather)
             }
             return cell
-        case 1...10:
+        case 1:
+            cell.separatorInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
+            if let weather = currentWeather {
+                cell.updateParameterCell(for: indexPath.row, with: weather)
+            }
+            return cell
+        case 2...11:
             if let weather = currentWeather {
                 cell.updateParameterCell(for: indexPath.row, with: weather)
             }
@@ -230,7 +242,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     // UITableViewDelegate
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let hourlyView = HourlyWeatherView()
-
+        hourlyView.backgroundColor = .black
         hourlyView.updateView(with: hourlyWeather)
         
         return hourlyView
@@ -243,9 +255,11 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.row {
         case 0:
-            return 250
+            return 250.0
+        case 1:
+            return 88.0
         default:
-            return 55.0
+            return 60.0
         }
     }
     

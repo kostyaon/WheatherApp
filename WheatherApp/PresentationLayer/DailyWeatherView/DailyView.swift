@@ -11,9 +11,10 @@ class DailyView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(17)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .left
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -38,7 +39,8 @@ class DailyView: UIView {
             .withSize(10)
         label.textColor = .systemBlue
         label.textAlignment = .right
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -51,9 +53,10 @@ class DailyView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .right
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -66,9 +69,10 @@ class DailyView: UIView {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)
-        label.textColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.4)
+        label.textColor = UIColor(red: 255.0, green: 255.0, blue: 255.0, alpha: 0.4)
         label.textAlignment = .right
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -90,7 +94,7 @@ class DailyView: UIView {
         addSubview(dayLabel)
         NSLayoutConstraint.activate([
             dayLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            dayLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
+            dayLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5),
            dayLabel.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -10)
         ])
         

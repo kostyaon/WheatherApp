@@ -11,9 +11,10 @@ class HourlyCell: UICollectionViewCell {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -28,7 +29,8 @@ class HourlyCell: UICollectionViewCell {
             .withSize(10)
         label.textColor = .systemBlue
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -51,9 +53,10 @@ class HourlyCell: UICollectionViewCell {
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)
-        label.textColor = .black
+        label.textColor = .white
         label.textAlignment = .center
-        label.shadowOffset = CGSize(width: 0, height: -1.2)
+        label.shadowColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.2)
+        label.shadowOffset = CGSize(width: 1, height: 1.2)
         
         return label
     }()
@@ -75,34 +78,30 @@ class HourlyCell: UICollectionViewCell {
         addSubview(timeLabel)
         NSLayoutConstraint.activate([
             timeLabel.topAnchor.constraint(equalTo: self.topAnchor),
-            timeLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            timeLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            timeLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
         
         // Setup predictionOfPerceptionLabel
         addSubview(predictionOfPerceptionLabel)
         NSLayoutConstraint.activate([
-            predictionOfPerceptionLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 1.0),
-            predictionOfPerceptionLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            predictionOfPerceptionLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+            predictionOfPerceptionLabel.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 2.0),
+            predictionOfPerceptionLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor)
         ])
         
         // Setup icon
         addSubview(icon)
         NSLayoutConstraint.activate([
-            icon.topAnchor.constraint(equalTo: predictionOfPerceptionLabel.bottomAnchor, constant: 10.0),
+            icon.topAnchor.constraint(equalTo: timeLabel.bottomAnchor, constant: 12.0),
             icon.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            icon.bottomAnchor.constraint(equalTo: icon.topAnchor, constant: 40),
-            icon.widthAnchor.constraint(equalToConstant: 40)
+            icon.widthAnchor.constraint(equalToConstant: 40),
+            icon.heightAnchor.constraint(equalToConstant: 40)
         ])
         
         // Setup temperatureLabel
         addSubview(temperatureLabel)
         NSLayoutConstraint.activate([
             temperatureLabel.topAnchor.constraint(equalTo: icon.bottomAnchor, constant: 13.0),
-            temperatureLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            temperatureLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            temperatureLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            temperatureLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
         ])
     }
     
@@ -126,7 +125,7 @@ class HourlyCell: UICollectionViewCell {
         if let temp = weather.temperature {
             timeLabel.text = weather.hour
             temperatureLabel.text = "\(temp.intFormat)°"
-            weather.probabilityOfPerception == 0.0 ? (predictionOfPerceptionLabel.text = "") : (predictionOfPerceptionLabel.text = "\(weather.probabilityOfPerception!.intFormat)%")
+            weather.probabilityOfPerception?.rounded() == 0.0 ? (predictionOfPerceptionLabel.text = "") : (predictionOfPerceptionLabel.text = "\(weather.probabilityOfPerception!.intFormat)%")
         } else {
             timeLabel.text = weather.time
             temperatureLabel.text = weather.sunState
