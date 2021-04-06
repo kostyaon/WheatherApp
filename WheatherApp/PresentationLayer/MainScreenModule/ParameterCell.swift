@@ -7,7 +7,7 @@ class ParameterCell: UITableViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "SUNRISE"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(15)
@@ -22,7 +22,7 @@ class ParameterCell: UITableViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "6:42 AM"
+        label.text = "----"
         label.numberOfLines = 0
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
@@ -71,7 +71,7 @@ class ParameterCell: UITableViewCell {
             valueLabel.font = UIFont
                 .preferredFont(forTextStyle: .subheadline)
                 .withSize(15)
-            valueLabel.text = "Today: \(weather.description.lowercased()). The current temperature is \(weather.temperature)°, feels like \(weather.feelsTemperature)°. The wind speed: \(weather.windSpeed)m/s"
+            valueLabel.text = "Today: \(weather.description.lowercased()). The current temperature is \(weather.temperature.intFormat)°, feels like \(weather.feelsTemperature.intFormat)°. The wind speed: \(weather.windSpeed)m/s"
         case 2:
             nameLabel.text = "SUNRISE"
             valueLabel.text = weather.sunrise
@@ -87,7 +87,7 @@ class ParameterCell: UITableViewCell {
             }
         case 5:
             nameLabel.text = "HUMIDITY"
-            valueLabel.text = "\(weather.humidity) %"
+            valueLabel.text = "\(weather.humidity)%"
         case 6:
             nameLabel.text = "WIND"
             valueLabel.text = "\(weather.windDirection) \(weather.windSpeed)m/s"

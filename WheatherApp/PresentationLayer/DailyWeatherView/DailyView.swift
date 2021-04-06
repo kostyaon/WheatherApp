@@ -7,7 +7,7 @@ class DailyView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Monday"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(17)
@@ -33,7 +33,7 @@ class DailyView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "33%"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(10)
@@ -49,7 +49,7 @@ class DailyView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "53"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)
@@ -65,7 +65,7 @@ class DailyView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "37"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)

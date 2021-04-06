@@ -13,7 +13,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "City"
+        label.text = "----"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(50)
@@ -29,7 +29,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Description"
+        label.text = "--------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(25)
@@ -46,7 +46,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "58°"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(80)
@@ -62,7 +62,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Max. 80°, min. 43°"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
@@ -152,7 +152,28 @@ class MainScreenView: UIView {
         ])
     }
     
-    private func updateCurrentWeather() {
+    private func updateCurrentWeather(latitude lat: Double, longitude long: Double) {
+        LocationManager.shared.reverseGeocoding(latitude: lat, longitude: long) { [weak self] (placemark, error) in
+            guard let weakSelf = self else {
+                return
+            }
+            
+            guard error == nil else {
+                print("Reverse geocoding error: \(error!.localizedDescription)")
+                return
+            }
+            
+            guard placemark!.count > 0 else {
+                print("Reverse geocoding has problem with data!")
+                return
+            }
+            
+            if let place = placemark {
+                weakSelf.cityLabel.text = place.first!.locality ?? "----"
+            } else {
+                weakSelf.cityLabel.text = "----"
+            }
+        }
         descriptionLabel.text = currentWeather!.description.capitalized
         currentTempLabel.text = "\(currentWeather!.temperature.intFormat)°"
         maxMinTempLabel.text = "Max. \(dailyWeather!.first!.maxTemperature.intFormat)°, min. \(dailyWeather!.first!.minTemperature.intFormat)°"
@@ -189,16 +210,18 @@ class MainScreenView: UIView {
         currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception
         
         let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
-        for index in 0...11 {
-            self.hourlyWeather.append(weather.hourly48[index])
-            for el in array {
-                if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
-                    self.hourlyWeather.append(el)
+        if self.hourlyWeather.count == 0 {
+            for index in 0...11 {
+                self.hourlyWeather.append(weather.hourly48[index])
+                for el in array {
+                    if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
+                        self.hourlyWeather.append(el)
+                    }
                 }
             }
         }
 
-        updateCurrentWeather()
+        updateCurrentWeather(latitude: weather.latitude!, longitude: weather.longitude!)
         tableView.reloadData()
     }
 }
