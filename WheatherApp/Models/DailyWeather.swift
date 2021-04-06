@@ -1,6 +1,6 @@
 import Foundation
 
-struct DailyWeather: Decodable {
+struct DailyWeather: Codable {
     let date: TimeInterval
     var day: String {
         let date = Date(timeIntervalSince1970: self.date)
@@ -73,5 +73,19 @@ struct DailyWeather: Decodable {
         let temp = try container.nestedContainer(keyedBy: TemperatureCodingKeys.self, forKey: .temp)
         minTemperature = try temp.decode(Double.self, forKey: .minTemperature)
         maxTemperature = try temp.decode(Double.self, forKey: .maxTemperature)
+    }
+    
+    // MARK: - Encoder implementation
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(date, forKey: .date)
+        try container.encode(sunriseTime, forKey: .sunriseTime)
+        try container.encode(sunsetTime, forKey: .sunsetTime)
+        try container.encode(weather, forKey: .weather)
+        try container.encode(probabilityOfPerception, forKey: .probabilityOfPerception)
+        
+        var temp = container.nestedContainer(keyedBy: TemperatureCodingKeys.self, forKey: .temp)
+        try temp.encode(minTemperature, forKey: .minTemperature)
+        try temp.encode(maxTemperature, forKey: .maxTemperature)
     }
 }

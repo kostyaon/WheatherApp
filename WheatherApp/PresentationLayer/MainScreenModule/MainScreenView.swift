@@ -13,7 +13,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "City"
+        label.text = "----"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(50)
@@ -29,7 +29,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Description"
+        label.text = "--------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(25)
@@ -46,7 +46,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "58°"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(80)
@@ -62,7 +62,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Max. 80°, min. 43°"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
@@ -152,7 +152,28 @@ class MainScreenView: UIView {
         ])
     }
     
-    private func updateCurrentWeather() {
+    private func updateCurrentWeather(latitude lat: Double, longitude long: Double) {
+        LocationManager.shared.reverseGeocoding(latitude: lat, longitude: long) { [weak self] (placemark, error) in
+            guard let weakSelf = self else {
+                return
+            }
+            
+            guard error == nil else {
+                print("Reverse geocoding error: \(error!.localizedDescription)")
+                return
+            }
+            
+            guard placemark!.count > 0 else {
+                print("Reverse geocoding has problem with data!")
+                return
+            }
+            
+            if let place = placemark {
+                weakSelf.cityLabel.text = place.first!.locality ?? "----"
+            } else {
+                weakSelf.cityLabel.text = "----"
+            }
+        }
         descriptionLabel.text = currentWeather!.description.capitalized
         currentTempLabel.text = "\(currentWeather!.temperature.intFormat)°"
         maxMinTempLabel.text = "Max. \(dailyWeather!.first!.maxTemperature.intFormat)°, min. \(dailyWeather!.first!.minTemperature.intFormat)°"
@@ -189,16 +210,18 @@ class MainScreenView: UIView {
         currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception
         
         let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
-        for index in 0...11 {
-            self.hourlyWeather.append(weather.hourly48[index])
-            for el in array {
-                if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
-                    self.hourlyWeather.append(el)
+        if self.hourlyWeather.count == 0 {
+            for index in 0...11 {
+                self.hourlyWeather.append(weather.hourly48[index])
+                for el in array {
+                    if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
+                        self.hourlyWeather.append(el)
+                    }
                 }
             }
         }
 
-        updateCurrentWeather()
+        updateCurrentWeather(latitude: weather.latitude!, longitude: weather.longitude!)
         tableView.reloadData()
     }
 }
@@ -276,21 +299,17 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         if (scrollView.contentOffset.y > 0 && delta > 0 && cityTopConstraint!.constant >= cityTopConstraintRange.lowerBound) {
             // Animate current weather description block
             if cityDelta < cityTopConstraintRange.lowerBound {
-                //animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 0.0, bound: cityTopConstraintRange.lowerBound)
                 cityTopConstraint!.constant = cityTopConstraintRange.lowerBound
                 currentTempLabel.alpha = 0.0
                 maxMinTempLabel.alpha  = 0.0
             } else {
-                cityTopConstraint!.constant -= delta
-                currentTempLabel.alpha -= delta/100
-                maxMinTempLabel.alpha -= delta/100
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: (currentTempLabel.alpha - delta/100), bound: (cityTopConstraint!.constant - delta))
                 
                 scrollView.contentOffset.y -= delta
             }
     
             // Animate tableView
             if tableViewDelta < tableViewTopConstraintRange.lowerBound {
-                //animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.lowerBound)
                 tableViewTopConstraint?.constant = tableViewTopConstraintRange.lowerBound
             } else {
                 tableViewTopConstraint!.constant -= delta*2
@@ -303,16 +322,14 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
             if cityDelta > cityTopConstraintRange.upperBound {
                 animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 1.0, bound: cityTopConstraintRange.upperBound)
             } else {
-                cityTopConstraint!.constant -= delta
-                currentTempLabel.alpha -= delta/100
-                maxMinTempLabel.alpha -= delta/100
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: (currentTempLabel.alpha - delta/100), bound: cityTopConstraint!.constant - delta)
             }
             
             // Animate tableView
             if tableViewDelta > tableViewTopConstraintRange.upperBound {
                 animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.upperBound)
             } else {
-                tableViewTopConstraint!.constant -= delta*2
+                animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: (tableViewTopConstraint!.constant - delta*2))
             }
         }
         

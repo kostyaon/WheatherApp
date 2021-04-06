@@ -7,7 +7,7 @@ class HourlyCell: UICollectionViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "9pm"
+        label.text = "----"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
@@ -23,7 +23,7 @@ class HourlyCell: UICollectionViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "60%"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(10)
@@ -39,7 +39,7 @@ class HourlyCell: UICollectionViewCell {
         let imageView = UIImageView()
         
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "icloud.fill")
+        imageView.image = UIImage(systemName: "icloud")
         imageView.contentMode = .scaleAspectFit
         
         return imageView
@@ -49,7 +49,7 @@ class HourlyCell: UICollectionViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "83°"
+        label.text = "---"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(18)
