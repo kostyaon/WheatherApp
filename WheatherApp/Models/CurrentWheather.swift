@@ -1,6 +1,6 @@
 import Foundation
 
-struct CurrentWheather: Decodable {
+struct CurrentWheather: Codable {
     let sunriseTime: TimeInterval
     var sunrise: String {
         let date = Date(timeIntervalSince1970: self.sunriseTime)
@@ -106,5 +106,21 @@ struct CurrentWheather: Decodable {
         windSpeed = try container.decode(Double.self, forKey: .windSpeed)
         windDegree = try container.decode(Double.self, forKey: .windDegree)
         weather = try container.decode([Weather].self, forKey: .weather)
+    }
+    
+    // MARK: - Encoder implementation
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(sunriseTime, forKey: .sunriseTime)
+        try container.encode(sunsetTime, forKey: .sunsetTime)
+        try container.encode(temperature, forKey: .temperature)
+        try container.encode(feelsTemperature, forKey: .feelsTemperature)
+        try container.encode(pressure, forKey: .pressure)
+        try container.encode(humidity, forKey: .humidity)
+        try container.encode(uvIndex, forKey: .uvIndex)
+        try container.encode(visibilityMeters, forKey: .visibilityMeters)
+        try container.encode(windSpeed, forKey: .windSpeed)
+        try container.encode(windDegree, forKey: .windDegree)
+        try container.encode(weather, forKey: .weather)
     }
 }

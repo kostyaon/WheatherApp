@@ -12,11 +12,16 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let locationManager = LocationManager.shared
-        locationManager.locationDelegate = self
-        locationManager.startSearchingLocation()
         
-       
+        if let savedData = PersistanceManager.loadWeatherResponse() {
+            DispatchQueue.main.async {
+                (self.view as? MainScreenView)?.updateView(with: savedData)
+            }
+        } else {
+            let locationManager = LocationManager.shared
+            locationManager.locationDelegate = self
+            locationManager.startSearchingLocation()
+        }
     }
     
     // MARK: - Private methods
@@ -27,6 +32,7 @@ class ViewController: UIViewController {
                 print("ERROR: \(error.localizedDescription)")
             case .success(let response):
                 DispatchQueue.main.async {
+                    PersistanceManager.saveWeatherResponse(item: response)
                     (self.view as? MainScreenView)?.updateView(with: response)
                 }
             }
@@ -38,7 +44,6 @@ class ViewController: UIViewController {
 extension ViewController: CurrentLocationManagerDelegate {
     func updateCurrentCoordinate(with coordinate: (Double, Double)) {
         updateWeatherResponse(latitude: coordinate.0, longitude: coordinate.1)
-        
     }
     
     func showLocationDeniedAlert(){
