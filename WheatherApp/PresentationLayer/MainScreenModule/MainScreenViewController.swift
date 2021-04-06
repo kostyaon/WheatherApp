@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import CoreLocation
 
-class ViewController: UIViewController {
+class MainScreenViewController: UIViewController {
     // MARK: - Views methods
     override func loadView() {
         let mainScreen = MainScreenView()
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
 }
 
 // MARK: - Extensions
-extension ViewController: CurrentLocationManagerDelegate {
+extension MainScreenViewController: CurrentLocationManagerDelegate {
     func updateCurrentCoordinate(with coordinate: (Double, Double)) {
         updateWeatherResponse(latitude: coordinate.0, longitude: coordinate.1)
     }
