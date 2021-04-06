@@ -7,7 +7,7 @@ class ParameterCell: UITableViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "SUNRISE"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(15)
@@ -22,7 +22,7 @@ class ParameterCell: UITableViewCell {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "6:42 AM"
+        label.text = "----"
         label.numberOfLines = 0
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)

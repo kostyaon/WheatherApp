@@ -29,7 +29,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Description"
+        label.text = "--------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(25)
@@ -46,7 +46,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "58°"
+        label.text = "--"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(80)
@@ -62,7 +62,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Max. 80°, min. 43°"
+        label.text = "------"
         label.font = UIFont
             .preferredFont(forTextStyle: .subheadline)
             .withSize(15)
@@ -210,11 +210,13 @@ class MainScreenView: UIView {
         currentWeather!.probabilityOfPerception = dailyWeather![0].probabilityOfPerception
         
         let array = addSunriseSunsetInHourlyWeather(from: [dailyWeather![0], dailyWeather![1]])
-        for index in 0...11 {
-            self.hourlyWeather.append(weather.hourly48[index])
-            for el in array {
-                if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
-                    self.hourlyWeather.append(el)
+        if self.hourlyWeather.count == 0 {
+            for index in 0...11 {
+                self.hourlyWeather.append(weather.hourly48[index])
+                for el in array {
+                    if weather.hourly48[index].hour == el.hour && weather.hourly48[index].day == el.day {
+                        self.hourlyWeather.append(el)
+                    }
                 }
             }
         }
