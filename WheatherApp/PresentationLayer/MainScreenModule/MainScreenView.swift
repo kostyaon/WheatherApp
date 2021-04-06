@@ -299,7 +299,6 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
         if (scrollView.contentOffset.y > 0 && delta > 0 && cityTopConstraint!.constant >= cityTopConstraintRange.lowerBound) {
             // Animate current weather description block
             if cityDelta < cityTopConstraintRange.lowerBound {
-                //animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 0.0, bound: cityTopConstraintRange.lowerBound)
                 cityTopConstraint!.constant = cityTopConstraintRange.lowerBound
                 currentTempLabel.alpha = 0.0
                 maxMinTempLabel.alpha  = 0.0
@@ -313,7 +312,6 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
     
             // Animate tableView
             if tableViewDelta < tableViewTopConstraintRange.lowerBound {
-                //animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.lowerBound)
                 tableViewTopConstraint?.constant = tableViewTopConstraintRange.lowerBound
             } else {
                 tableViewTopConstraint!.constant -= delta*2
@@ -326,16 +324,14 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
             if cityDelta > cityTopConstraintRange.upperBound {
                 animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: 1.0, bound: cityTopConstraintRange.upperBound)
             } else {
-                cityTopConstraint!.constant -= delta
-                currentTempLabel.alpha -= delta/100
-                maxMinTempLabel.alpha -= delta/100
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: (currentTempLabel.alpha - delta/100), bound: cityTopConstraint!.constant - delta)
             }
             
             // Animate tableView
             if tableViewDelta > tableViewTopConstraintRange.upperBound {
                 animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: tableViewTopConstraintRange.upperBound)
             } else {
-                tableViewTopConstraint!.constant -= delta*2
+                animateBigDelta(constraint: tableViewTopConstraint!, views: nil, alphaForViews: nil, bound: (tableViewTopConstraint!.constant - delta*2))
             }
         }
         

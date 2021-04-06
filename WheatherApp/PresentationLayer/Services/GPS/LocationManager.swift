@@ -39,9 +39,6 @@ extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         let currentLocation = locations[0]
         
-        print("LATITUDE: \(currentLocation.coordinate.latitude)")
-        print("LONGITUDE: \(currentLocation.coordinate.longitude)")
-        
         locationDelegate?.updateCurrentCoordinate(with: (currentLocation.coordinate.latitude, currentLocation.coordinate.longitude))
         
         locationManager.stopUpdatingLocation()
