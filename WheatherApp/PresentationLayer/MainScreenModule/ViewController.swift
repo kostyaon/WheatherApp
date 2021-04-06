@@ -17,11 +17,12 @@ class ViewController: UIViewController {
             DispatchQueue.main.async {
                 (self.view as? MainScreenView)?.updateView(with: savedData)
             }
-        } else {
-            let locationManager = LocationManager.shared
-            locationManager.locationDelegate = self
-            locationManager.startSearchingLocation()
         }
+        
+        let locationManager = LocationManager.shared
+        locationManager.locationDelegate = self
+        locationManager.startSearchingLocation()
+        
     }
     
     // MARK: - Private methods

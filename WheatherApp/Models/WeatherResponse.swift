@@ -6,6 +6,7 @@ struct WeatherResponse: Codable {
     let currentWeather: CurrentWheather
     let hourly48: [HourlyWeather]
     let daily7: [DailyWeather]
+    var city: String?
     
     // MARK: - CodingKeys
     enum CodingKeys: String, CodingKey {

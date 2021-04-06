@@ -5,11 +5,17 @@ class LocationManager: NSObject {
     // MARK: - Properties
     static let shared = LocationManager()
     
+    let locationManager = CLLocationManager()
+    let geocoder = CLGeocoder()
     var locationDelegate: CurrentLocationManagerDelegate?
-    var locationManager = CLLocationManager()
     var currentCoordinate: (Double, Double)?
-    
+        
     // MARK: - Helper methods
+    public func reverseGeocoding(latitude: Double, longitude: Double, completionHandler: @escaping ([CLPlacemark]?, Error?) -> Void) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        geocoder.reverseGeocodeLocation(location, completionHandler: completionHandler)
+    }
+    
     public func startSearchingLocation() {
         if locationManager.authorizationStatus == .notDetermined {
             locationManager.requestWhenInUseAuthorization()
@@ -26,7 +32,6 @@ class LocationManager: NSObject {
             locationManager.startUpdatingLocation()
         }
     }
-    
 }
 
 // MARK: - Extensions

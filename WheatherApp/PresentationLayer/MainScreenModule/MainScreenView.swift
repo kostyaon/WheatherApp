@@ -13,7 +13,7 @@ class MainScreenView: UIView {
         let label = UILabel()
         
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "City"
+        label.text = "----"
         label.font = UIFont
             .preferredFont(forTextStyle: .headline)
             .withSize(50)
@@ -152,7 +152,28 @@ class MainScreenView: UIView {
         ])
     }
     
-    private func updateCurrentWeather() {
+    private func updateCurrentWeather(latitude lat: Double, longitude long: Double) {
+        LocationManager.shared.reverseGeocoding(latitude: lat, longitude: long) { [weak self] (placemark, error) in
+            guard let weakSelf = self else {
+                return
+            }
+            
+            guard error == nil else {
+                print("Reverse geocoding error: \(error!.localizedDescription)")
+                return
+            }
+            
+            guard placemark!.count > 0 else {
+                print("Reverse geocoding has problem with data!")
+                return
+            }
+            
+            if let place = placemark {
+                weakSelf.cityLabel.text = place.first!.locality ?? "----"
+            } else {
+                weakSelf.cityLabel.text = "----"
+            }
+        }
         descriptionLabel.text = currentWeather!.description.capitalized
         currentTempLabel.text = "\(currentWeather!.temperature.intFormat)°"
         maxMinTempLabel.text = "Max. \(dailyWeather!.first!.maxTemperature.intFormat)°, min. \(dailyWeather!.first!.minTemperature.intFormat)°"
@@ -198,7 +219,7 @@ class MainScreenView: UIView {
             }
         }
 
-        updateCurrentWeather()
+        updateCurrentWeather(latitude: weather.latitude!, longitude: weather.longitude!)
         tableView.reloadData()
     }
 }
