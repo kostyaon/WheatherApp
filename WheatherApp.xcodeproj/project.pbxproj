@@ -194,7 +194,7 @@
 				84FA1F17261BB1D400D6C483 /* Persistance */,
 			);
 			name = Services;
-			path = PresentationLayer/Services;
+			path = Resources/Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
