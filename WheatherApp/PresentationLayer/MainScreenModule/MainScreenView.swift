@@ -303,9 +303,7 @@ extension MainScreenView: UITableViewDataSource, UITableViewDelegate {
                 currentTempLabel.alpha = 0.0
                 maxMinTempLabel.alpha  = 0.0
             } else {
-                cityTopConstraint!.constant -= delta
-                currentTempLabel.alpha -= delta/100
-                maxMinTempLabel.alpha -= delta/100
+                animateBigDelta(constraint: cityTopConstraint!, views: [currentTempLabel, maxMinTempLabel], alphaForViews: (currentTempLabel.alpha - delta/100), bound: (cityTopConstraint!.constant - delta))
                 
                 scrollView.contentOffset.y -= delta
             }
